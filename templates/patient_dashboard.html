@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom styles */
+        body {
+            background-color: #f8f9fa; /* Light gray background */
+        }
+        .card {
+            border: none; /* Remove default card border */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow */
+        }
+        .card-body {
+            padding: 40px;
+        }
+        .profile-picture {
+            border-radius: 50%; /* Circular profile picture */
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+        }
+        /* Center the profile horizontally */
+        .profile-container {
+            display: flex;
+            justify-content: center;
+        }
+        .profile-details {
+            max-width: 400px; /* Limit width for better readability */
+        }
+        .profile-details p {
+            margin-bottom: 0; /* Remove default margin for paragraphs */
+        }
+        .profile-details .form-group {
+            display: flex;
+            align-items: center;
+        }
+        .profile-details label {
+            width: 120px; /* Fixed width for labels */
+            margin-right: 20px; /* Add some space between label and value */
+            text-align: right; /* Align labels to the right */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="text-center mb-4">User Profile</h1>
+                    <div class="profile-container">
+                        <div class="profile-details">
+                            {% if user.profile_picture %}
+                            <div class="form-group">
+                                <label for="profile_picture"></label>
+                                <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="profile-picture">
+                            </div>
+                            {% endif %}
+                            <div class="form-group">
+                                <label for="first_name">Name:</label>
+                                <p>{{ user.first_name }} {{ user.last_name }}</p>
+                            </div>
+                            <div class="form-group">
+                                <label for="username">Username:</label>
+                                <p>{{ user.username }}</p>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <p>{{ user.email }}</p>
+                            </div>
+                            {% if user.is_doctor %}
+                            <div class="form-group">
+                                <label for="role">Role:</label>
+                                <p>Doctor</p>
+                            </div>
+                            {% elif user.is_patient %}
+                            <div class="form-group">
+                                <label for="role">Role:</label>
+                                <p>Patient</p>
+                            </div>
+                            {% endif %}
+                            <!-- Additional user details -->
+
+                            <div class="form-group">
+                                <label for="address_line1">Address:</label>
+                                <p>{{ user.address_line1 }}, {{ user.city }}, {{ user.state }}, {{ user.pincode }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS (Optional, not required for form functionality) -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
