@@ -72,12 +72,30 @@ WSGI_APPLICATION = 'Role_based_login_system.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+# First, make sure you have installed the necessary MySQL adapter for Django.
+# You can install it using pip:
+# pip install mysqlclient
+
+# Then, in your settings.py file:
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'agt',  # Change this to your database name
+        'USER': 'root',  # Change this to your MySQL username
+        'PASSWORD': 'Aniket@9277',  # Change this to your MySQL password
+        'HOST': 'localhost',  # Change this if your MySQL server is running on a different host
+        'PORT': '3306',  # Change this if your MySQL server is running on a different port
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
