@@ -53,6 +53,7 @@
     </style>
 </head>
 <body>
+
 <div class="content">
     <div class="container">
         <div class="row justify-content-center">
@@ -61,11 +62,11 @@
                     <h1>Welcome</h1>
                     <label>Log in if you're already registered</label>
                     <div class="form-group">
-                        <a class="btn btn-primary btn-block" href="{% url 'login_view' %}">Login</a>
+                        <a class="btn btn-primary btn-block" href="{% url 'account:login_view' %}">Login</a>
                     </div>
                     <label>If not registered, register here</label>
                     <div class="form-group">
-                        <a class="btn btn-primary btn-block" href="{% url 'register' %}">Register</a>
+                        <a class="btn btn-primary btn-block" href="{% url 'account:register' %}">Register</a>
                     </div>
                 </div>
             </div>

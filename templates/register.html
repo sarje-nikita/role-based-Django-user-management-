@@ -14,51 +14,39 @@
             <div class="card">
                 <div class="card-body">
                     <h1 class="text-center mb-4">User Registration page</h1>
-<!--                    <span class="mb-2 text-muted">-->
-<!--                        {% if msg %}-->
-<!--                            {{ msg | safe }}-->
-<!--                        {% else %}-->
-<!--                            Login page-->
-<!--                        {% endif %}-->
-<!--                    </span>-->
+                    <span class="mb-2 text-muted">
+                        {% if msg %}
+                            {{ msg | safe }}
+                        {% else %}
+                            Login page
+                        {% endif %}
+                    </span>
                     <form method="post", enctype="multipart/form-data" id="registrationForm">
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="first_name">First Name</label>
-                            <input type="text" class="form-control" id="first_name" name="first_name">
+                            {{ form.first_name }}
                         </div>
                         <div class="form-group">
                             <label for="last_name">Last Name</label>
-                            <input type="text" class="form-control" id="last_name" name="last_name">
+                            {{ form.last_name }}
                         </div>
                         <div class="form-group">
                             <label for="username">Username</label>
-                            <input type="text" class="form-control" id="username" name="username">
+                            {{ form.username }}
                         </div>
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" class="form-control" id="email" name="email">
+                            {{ form.email }}
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
-                            <div class="input-group">
-                                <input type="password" class="form-control" id="password" name="password">
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                                        <i class="far fa-eye"></i>
-                                    </button>
-                                </div>
-                            </div>
+                            {{ form.password1 }}
                         </div>
                         <div class="form-group">
-                            <label for="confirm_password">Confirm Password</label>
-                            <input type="password" class="form-control" id="confirm_password" name="confirm_password">
-                            <span id="password_error" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <div class="progress">
-                                <div id="password_strength" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
+                            <label for="password">Confirm Password</label>
+                            {{ form.password2 }}
+                            <span id="passwordMatch" class="text-muted"></span>
                         </div>
                         <div class="form-group form-check">
                             <input type="checkbox" class="form-check-input" id="is_patient" name="is_patient">
@@ -72,6 +60,7 @@
                         <div class="form-group">
                             <label for="profile_picture">Profile Picture</label>
                             <input type="file" class="form-control-file" id="profile_picture" name="profile_picture">
+                            <img id="preview" src="#" alt="Preview" style="display: none; max-width: 100px; max-height: 100px;">
                         </div>
                         <div class="form-group">
                             <label for="address_line1">Address Line 1</label>
@@ -102,70 +91,38 @@
 <!-- Bootstrap JS (Optional, not required for form functionality) -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 <script>
-    // Live validation for matching passwords
-    document.getElementById("confirm_password").addEventListener("input", function () {
-        var password = document.getElementById("password").value;
-        var confirmPassword = document.getElementById("confirm_password").value;
-        var errorSpan = document.getElementById("password_error");
-
-        if (password !== confirmPassword) {
-            errorSpan.textContent = "Passwords do not match";
-        } else {
-            errorSpan.textContent = "";
-        }
+    $(document).ready(function(){
+        $('#registrationForm input[name="password2"]').keyup(function(){
+            var password1 = $('#registrationForm input[name="password1"]').val();
+            var password2 = $(this).val();
+            if(password1 == password2){
+                $('#passwordMatch').text('Passwords match').css('color', 'green');
+            } else {
+                $('#passwordMatch').text('Passwords do not match').css('color', 'red');
+            }
+        });
     });
+    $(document).ready(function(){
+        // Show image preview
+        $('#profile_picture').change(function(){
+            readURL(this);
+        });
 
-    // Password strength indicator
-    document.getElementById("password").addEventListener("input", function () {
-        var password = document.getElementById("password").value;
-        var strengthBar = document.getElementById("password_strength");
-
-        // Calculate password strength
-        var strength = 0;
-        if (password.match(/[a-z]+/)) {
-            strength += 1;
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#preview').attr('src', e.target.result).show();
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
         }
-        if (password.match(/[A-Z]+/)) {
-            strength += 1;
-        }
-        if (password.match(/[0-9]+/)) {
-            strength += 1;
-        }
-        if (password.length >= 8) {
-            strength += 1;
-        }
-        if (password.match(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/)) {
-            strength += 1;
-        }
-
-        // Update progress bar
-        var progress = (strength / 4) * 100;
-        strengthBar.style.width = progress + "%";
-        strengthBar.setAttribute("aria-valuenow", progress);
-
-        // Update color based on strength
-        if (progress < 50) {
-            strengthBar.classList.remove("bg-warning", "bg-success");
-            strengthBar.classList.add("bg-danger");
-        } else if (progress >= 50 && progress < 100) {
-            strengthBar.classList.remove("bg-danger", "bg-success");
-            strengthBar.classList.add("bg-warning");
-        } else {
-            strengthBar.classList.remove("bg-danger", "bg-warning");
-            strengthBar.classList.add("bg-success");
-        }
-    });
-
-    document.getElementById("togglePassword").addEventListener("click", function () {
-        var passwordInput = document.getElementById("password");
-        var type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
-        passwordInput.setAttribute("type", type);
-        // Toggle eye icon
-        var eyeIcon = document.querySelector("#togglePassword i");
-        eyeIcon.classList.toggle("fa-eye");
-        eyeIcon.classList.toggle("fa-eye-slash");
     });
 </script>
+
 </body>
 </html>
